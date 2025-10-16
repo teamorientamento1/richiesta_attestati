@@ -262,7 +262,7 @@
     // ========== CONFIGURAZIONE MICROSOFT FORMS ==========
     const MS_FORMS_CONFIG = {
       // 🔹 Sostituisci questo URL con quello del tuo Microsoft Form
-      BASE_URL: "https://forms.office.com/Pages/ResponsePage.aspx?id=MWtFxyCi9Ue-Ukc4KGcKoRBcQtrLxDxHtGeSc5uVjjlUMTNEVjhDUzNYWVg0T0E2VDVRVTIyODJERi4u&rce8910afb996411a8b39e40c1c492b38=RSSMRA85M01H501Z",
+      BASE_URL: "https://forms.office.com/Pages/ResponsePage.aspx?id=MWtFxyCi9Ue-Ukc4KGcKoRBcQtrLxDxHtGeSc5uVjjlUQkhUWUpJSjk3WlpKMTFWT0VGNTRHN0RUUi4u",
       
       // 🔹 Sostituisci con l'ID del campo "Codice Fiscale" del tuo form
       CF_FIELD_ID: "r4a399b8065d54b8ebcd2a6c2ca505819"
@@ -353,6 +353,8 @@
     verifyBtn.addEventListener('click', async () => {
       const cf = inputs.map(input => input.value).join('').toUpperCase();
       
+      console.log('🔍 CF inserito dall\'utente:', cf);
+      
       verifyBtn.disabled = true;
       verifyBtn.innerHTML = '<span class="loader"></span> Verifica in corso...';
       
@@ -361,10 +363,14 @@
         if (!response.ok) throw new Error('Impossibile caricare i dati.');
         
         const iscritti = await response.json();
+        console.log('📋 Lista iscritti caricata:', iscritti);
+        console.log('✅ CF trovato?', iscritti.includes(cf));
         
         if (iscritti.includes(cf)) {
-          // ✅ ISCRITTO: Redirect a Microsoft Forms con prefill
+          // ✅ ISCRITTO: Redirect a Microsoft Forms con prefill del CF inserito
           const formsUrl = `${MS_FORMS_CONFIG.BASE_URL}&${MS_FORMS_CONFIG.CF_FIELD_ID}=${encodeURIComponent(cf)}`;
+          
+          console.log('🌐 URL generato:', formsUrl);
           
           showModal(
             '✓',
